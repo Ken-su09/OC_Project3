@@ -1,6 +1,7 @@
 
 package com.openclassrooms.entrevoisins.neighbour_list;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -15,13 +16,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
-
 
 
 /**
@@ -66,6 +75,36 @@ public class NeighboursListTest {
         onView(ViewMatchers.withId(R.id.list_neighbours))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
         // Then : the number of element is 11
-        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT-1));
+        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT - 1));
+    }
+
+    /**
+     * We ensure that our recyclerview click open the activity details
+     */
+    @Test
+    public void myNeighboursList_clickItemAction_shouldShowNeighbourDetails() {
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(ViewMatchers.withId(R.id.neighbour_details_root)).check(matches(isDisplayed()));
+    }
+
+    /**
+     * We ensure that the textview of the neighbour is perfectly fill
+     */
+    @Test
+    public void myNeighboursList_clickItemAction_neighbourNameShouldNotBeEmpty() {
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(not(withText(""))));
+    }
+
+    /**
+     * We ensure that the favorite list contains only favorites neighbour
+     */
+    @Test
+    public void myNeighboursList_swipeAction_favoritesListShouldOnlyContainsFavoriteNeighbour() {
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(ViewMatchers.withId(R.id.add_to_favorites)).perform(click());
+        onView(ViewMatchers.withId(R.id.neighbour_details_root)).perform(ViewActions.pressBack());
+        onView(ViewMatchers.withId(R.id.container)).perform(ViewActions.swipeLeft());
+        onView(ViewMatchers.withId(R.id.list_neighbours_favorites)).check(withItemCount(1));
     }
 }
