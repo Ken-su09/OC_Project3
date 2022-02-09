@@ -1,6 +1,12 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list.adapters;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +17,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
+import com.openclassrooms.entrevoisins.events.FavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.OnAdapterItemClickListener;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.activities.NeighbourDetailsActivity;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.fragments.FavoriteFragment;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.fragments.NeighbourFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,9 +37,16 @@ import butterknife.ButterKnife;
 public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeighbourRecyclerViewAdapter.ViewHolder> {
 
     private final List<Neighbour> mNeighbours;
+    private final Activity activity;
+    private Fragment fragment;
 
-    public MyNeighbourRecyclerViewAdapter(List<Neighbour> items) {
+    private OnAdapterItemClickListener mCallBack;
+
+    public MyNeighbourRecyclerViewAdapter(List<Neighbour> items, Activity activity, Fragment fragment, OnAdapterItemClickListener mCallBack) {
         mNeighbours = items;
+        this.activity = activity;
+        this.fragment = fragment;
+        this.mCallBack = mCallBack;
     }
 
     @Override
@@ -45,12 +65,16 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.mNeighbourAvatar);
 
-        holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
-            }
+        holder.root.setOnClickListener(v -> {
+            holder.root.isEnabled();
+            mCallBack.onAdapterItemClickListener(neighbour.getId());
         });
+
+        if (fragment instanceof FavoriteFragment) {
+            holder.mDeleteButton.setOnClickListener(v -> EventBus.getDefault().post(new FavoriteNeighbourEvent(neighbour)));
+        } else {
+            holder.mDeleteButton.setOnClickListener(v -> EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour)));
+        }
     }
 
     @Override
@@ -59,6 +83,8 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.root)
+        public ConstraintLayout root;
         @BindView(R.id.item_list_avatar)
         public ImageView mNeighbourAvatar;
         @BindView(R.id.item_list_name)

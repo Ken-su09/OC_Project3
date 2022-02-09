@@ -1,11 +1,17 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list.activities;
 
 import android.content.Intent;
+
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +44,9 @@ public class AddNeighbourActivity extends AppCompatActivity {
     @BindView(R.id.create)
     MaterialButton addButton;
 
+    @BindView(R.id.toolbar)
+    MaterialToolbar mToolbar;
+
     private NeighbourApiService mApiService;
     private String mNeighbourImage;
 
@@ -46,7 +55,15 @@ public class AddNeighbourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_neighbour);
         ButterKnife.bind(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setSupportActionBar(mToolbar);
+        mToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         mApiService = DI.getNeighbourApiService();
         init();
     }
@@ -54,7 +71,7 @@ public class AddNeighbourActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home : {
+            case android.R.id.home: {
                 finish();
                 return true;
             }
@@ -68,9 +85,13 @@ public class AddNeighbourActivity extends AppCompatActivity {
                 .apply(RequestOptions.circleCropTransform()).into(avatar);
         nameInput.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 addButton.setEnabled(s.length() > 0);
@@ -87,7 +108,8 @@ public class AddNeighbourActivity extends AppCompatActivity {
                 mNeighbourImage,
                 addressInput.getEditText().getText().toString(),
                 phoneInput.getEditText().getText().toString(),
-                aboutMeInput.getEditText().getText().toString()
+                aboutMeInput.getEditText().getText().toString(),
+                false
         );
         mApiService.createNeighbour(neighbour);
         finish();
@@ -95,14 +117,16 @@ public class AddNeighbourActivity extends AppCompatActivity {
 
     /**
      * Generate a random image. Useful to mock image picker
+     *
      * @return String
      */
     String randomImage() {
-        return "https://i.pravatar.cc/150?u="+ System.currentTimeMillis();
+        return "https://i.pravatar.cc/150?u=" + System.currentTimeMillis();
     }
 
     /**
      * Used to navigate to this activity
+     *
      * @param activity
      */
     public static void navigate(FragmentActivity activity) {
