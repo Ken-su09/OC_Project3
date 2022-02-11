@@ -1,220 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/neighbour_details_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/neighbour_details_root">
+    android:background="#ebeff0"
+    tools:context=".ui.neighbour_list.activities.NeighbourDetailsActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/neighbour_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="260dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/caroline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/details_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/neighbour_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/neighbour_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/neighbour_image"
+        tools:text="Caroline" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_to_favorites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/app_name"
         app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/neighbour_image"
         app:srcCompat="@drawable/ic_star_white_24dp"
         app:tint="@color/yellow" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.neighbour_list.activities.NeighbourDetailsActivity">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/neighbour_image">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/neighbour_image"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="260dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/caroline"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/details_toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/neighbour_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="@+id/neighbour_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/neighbour_image"
-            tools:text="Caroline" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neighbour_image">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/neighbour_data_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/neighbour_data_layout"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardElevation="5dp"
-                    app:cardUseCompatPadding="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="match_parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/neighbour_name_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Caroline" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/neighbour_name_1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:textColor="@color/black"
-                            android:textSize="25sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="Caroline" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/location_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        app:layout_constraintStart_toStartOf="@+id/neighbour_name_1"
+                        app:layout_constraintTop_toBottomOf="@+id/neighbour_name_1"
+                        app:srcCompat="@drawable/ic_placeholder" />
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/location_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="25dp"
-                            app:layout_constraintStart_toStartOf="@+id/neighbour_name_1"
-                            app:layout_constraintTop_toBottomOf="@+id/neighbour_name_1"
-                            app:srcCompat="@drawable/ic_placeholder" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/location_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/location_icon"
+                        app:layout_constraintStart_toEndOf="@+id/location_icon"
+                        app:layout_constraintTop_toTopOf="@+id/location_icon"
+                        tools:text="Saint pierre du mont à 5km" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/location_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:textColor="@color/grey"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/location_icon"
-                            app:layout_constraintStart_toEndOf="@+id/location_icon"
-                            app:layout_constraintTop_toTopOf="@+id/location_icon"
-                            tools:text="Saint pierre du mont à 5km" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/phone_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="35dp"
+                        app:layout_constraintStart_toStartOf="@+id/location_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/location_icon"
+                        app:srcCompat="@drawable/ic_call" />
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/phone_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="35dp"
-                            app:layout_constraintStart_toStartOf="@+id/location_icon"
-                            app:layout_constraintTop_toBottomOf="@+id/location_icon"
-                            app:srcCompat="@drawable/ic_call" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/phone_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
+                        app:layout_constraintStart_toEndOf="@+id/phone_icon"
+                        app:layout_constraintTop_toTopOf="@+id/phone_icon"
+                        tools:text="+33 9 86 57 90 14" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/phone_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:textColor="@color/grey"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
-                            app:layout_constraintStart_toEndOf="@+id/phone_icon"
-                            app:layout_constraintTop_toTopOf="@+id/phone_icon"
-                            tools:text="+33 9 86 57 90 14" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/social_network_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/phone_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/phone_icon"
+                        app:srcCompat="@drawable/ic_internet" />
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/social_network_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="35dp"
-                            android:layout_marginBottom="20dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/phone_icon"
-                            app:layout_constraintTop_toBottomOf="@+id/phone_icon"
-                            app:srcCompat="@drawable/ic_internet" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/social_network_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/social_network_icon"
+                        app:layout_constraintStart_toEndOf="@+id/social_network_icon"
+                        app:layout_constraintTop_toTopOf="@+id/social_network_icon"
+                        tools:text="www.facebook.fr/caroline" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/social_network_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:textColor="@color/grey"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/social_network_icon"
-                            app:layout_constraintStart_toEndOf="@+id/social_network_icon"
-                            app:layout_constraintTop_toTopOf="@+id/social_network_icon"
-                            tools:text="www.facebook.fr/caroline" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/neighbour_data_layout">
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardElevation="5dp"
-                    app:cardUseCompatPadding="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/neighbour_data_layout">
+                    android:layout_height="match_parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/neighbour_description_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="À propos de moi"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/neighbour_description_title"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:text="À propos de moi"
-                            android:textColor="@color/black"
-                            android:textSize="25sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/neighbour_description_content"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/neighbour_description_title"
+                        app:layout_constraintTop_toBottomOf="@+id/neighbour_description_title"
+                        tools:text="Bonjour !Je souhaiterais faire de la marche nordique. Pas initiée, je recherche une ou plusieurs personnes susceptibles de m'accompagner !J'aime les jeux de cartes tels la belote et le tarot.." />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/neighbour_description_content"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="25dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="16dp"
-                            android:textColor="@color/grey"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/neighbour_description_title"
-                            app:layout_constraintTop_toBottomOf="@+id/neighbour_description_title"
-                            tools:text="Bonjour !Je souhaiterais faire de la marche nordique. Pas initiée, je recherche une ou plusieurs personnes susceptibles de m'accompagner !J'aime les jeux de cartes tels la belote et le tarot.." />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                </com.google.android.material.card.MaterialCardView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </ScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,14 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
-import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -52,45 +48,9 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
     @BindView(R.id.neighbour_description_content)
     AppCompatTextView neighbourDescriptionContent;
 
-    private void fillNeighbourData() {
-        runOnUiThread(() -> Glide.with(activity)
-                .load(convertImageLink(neighbour.getAvatarUrl()))
-                .into(neighbourImage));
-
-        neighbourName.setText(neighbour.getName());
-        neighbourName1.setText(neighbour.getName());
-        locationContent.setText(neighbour.getAddress());
-        phoneContent.setText(neighbour.getPhoneNumber());
-        socialNetworkContent.setText("www.facebook.fr/" + neighbour.getName().toLowerCase(Locale.ROOT));
-        neighbourDescriptionContent.setText(neighbour.getAboutMe());
-
-        isFavorite = neighbour.getIsFavorite();
-        checkIfFavorite();
-    }
-
-    private String convertImageLink(String link) {
-        return link.replace("150", "400");
-    }
-
-    private void getNeighbourForService() {
-        NeighbourApiService mApiService = DI.getNeighbourApiService();
-
-        for (int i = 0; i <= mApiService.getNeighbours().size(); i++) {
-            if (mApiService.getNeighbours().get(i).getId() == getIntent().getLongExtra("id", 0)) {
-                neighbour = mApiService.getNeighbours().get(i);
-                break;
-            } else {
-                neighbour = mApiService.getNeighbours().get(i);
-            }
-        }
-    }
-
     //endregion
 
-    private Neighbour neighbour;
-    private final Activity activity = this;
     private Boolean isFavorite = false;
-
     private NeighbourApiService mApiService;
 
     @Override
@@ -110,12 +70,28 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        getNeighbourForService();
-        fillNeighbourData();
+        Neighbour neighbour = getNeighbourFromRepository();
 
-        addToFavorites.setOnClickListener(view -> {
-            addToFavorites();
-        });
+        if (neighbour != null) {
+            Glide.with(this)
+                    .load(convertImageLink(neighbour.getAvatarUrl()))
+                    .into(neighbourImage);
+
+            neighbourName.setText(neighbour.getName());
+            neighbourName1.setText(neighbour.getName());
+            locationContent.setText(neighbour.getAddress());
+            phoneContent.setText(neighbour.getPhoneNumber());
+            socialNetworkContent.setText("www.facebook.fr/" + neighbour.getName().toLowerCase(Locale.ROOT));
+            neighbourDescriptionContent.setText(neighbour.getAboutMe());
+
+            isFavorite = neighbour.getIsFavorite();
+
+            updateFavoriteFabIcon();
+
+            addToFavorites.setOnClickListener(view -> {
+                addToFavorites(neighbour.getId());
+            });
+        }
     }
 
     @Override
@@ -126,7 +102,30 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkIfFavorite() {
+    private String convertImageLink(String link) {
+        return link.replace("150", "400");
+    }
+
+    @Nullable
+    private Neighbour getNeighbourFromRepository() {
+        Neighbour neighbour = null;
+        NeighbourApiService mApiService = DI.getNeighbourApiService();
+
+        for (int i = 0; i <= mApiService.getNeighbours().size(); i++) {
+            if (mApiService.getNeighbours().get(i).getId() == getIntent().getLongExtra("id", 0)) {
+                neighbour = mApiService.getNeighbours().get(i);
+                break;
+            }
+        }
+
+        if (neighbour == null) {
+            finish();
+        }
+
+        return neighbour;
+    }
+
+    private void updateFavoriteFabIcon() {
         if (isFavorite) {
             addToFavorites.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_star_white_24dp));
         } else {
@@ -134,14 +133,9 @@ public class NeighbourDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void addToFavorites() {
-        mApiService.neighbourChangeFavorites(neighbour);
-        if (isFavorite) {
-            addToFavorites.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_star_border_white_24dp));
-            isFavorite = false;
-        } else {
-            addToFavorites.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_star_white_24dp));
-            isFavorite = true;
-        }
+    private void addToFavorites(long id) {
+        mApiService.neighbourChangeFavorites(id);
+        isFavorite = !isFavorite;
+        updateFavoriteFabIcon();
     }
 }

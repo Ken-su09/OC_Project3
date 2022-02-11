@@ -16,19 +16,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
-import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -60,8 +57,7 @@ public class NeighboursListTest {
     @Test
     public void myNeighboursList_shouldNotBeEmpty() {
         // First scroll to the position that needs to be matched and click on it.
-        onView(ViewMatchers.withId(R.id.list_neighbours))
-                .check(matches(hasMinimumChildCount(1)));
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).check(matches(hasMinimumChildCount(1)));
     }
 
     /**
@@ -70,12 +66,12 @@ public class NeighboursListTest {
     @Test
     public void myNeighboursList_deleteAction_shouldRemoveItem() {
         // Given : We remove the element at position 2
-        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT));
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).check(withItemCount(ITEMS_COUNT));
         // When perform a click on a delete icon
-        onView(ViewMatchers.withId(R.id.list_neighbours))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
+
         // Then : the number of element is 11
-        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT - 1));
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).check(withItemCount(ITEMS_COUNT - 1));
     }
 
     /**
@@ -83,7 +79,7 @@ public class NeighboursListTest {
      */
     @Test
     public void myNeighboursList_clickItemAction_shouldShowNeighbourDetails() {
-        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(ViewMatchers.withId(R.id.neighbour_details_root)).check(matches(isDisplayed()));
     }
 
@@ -92,7 +88,7 @@ public class NeighboursListTest {
      */
     @Test
     public void myNeighboursList_clickItemAction_neighbourNameShouldNotBeEmpty() {
-        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(not(withText(""))));
     }
 
@@ -101,10 +97,17 @@ public class NeighboursListTest {
      */
     @Test
     public void myNeighboursList_swipeAction_favoritesListShouldOnlyContainsFavoriteNeighbour() {
-        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(click());
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(withText("Caroline")));
         onView(ViewMatchers.withId(R.id.add_to_favorites)).perform(click());
+
         onView(ViewMatchers.withId(R.id.neighbour_details_root)).perform(ViewActions.pressBack());
-        onView(ViewMatchers.withId(R.id.container)).perform(ViewActions.swipeLeft());
-        onView(ViewMatchers.withId(R.id.list_neighbours_favorites)).check(withItemCount(1));
+        onView(ViewMatchers.withId(R.id.container)).perform(swipeLeft());
+
+//        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(1));
+        onView(allOf(ViewMatchers.withId(R.id.list_neighbours), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(ViewMatchers.withId(R.id.neighbour_name)).check(matches(withText("Caroline")));
+
+        // Check textName
     }
 }

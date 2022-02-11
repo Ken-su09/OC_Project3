@@ -1,15 +1,16 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,7 @@ import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
-import com.openclassrooms.entrevoisins.ui.neighbour_list.OnAdapterItemClickListener;
-import com.openclassrooms.entrevoisins.ui.neighbour_list.activities.NeighbourDetailsActivity;
+import com.openclassrooms.entrevoisins.ui.neighbour_list.OnNeighbourClickListener;
 import com.openclassrooms.entrevoisins.ui.neighbour_list.adapters.MyNeighbourRecyclerViewAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,18 +29,31 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.List;
 
 
-public class NeighbourFragment extends Fragment implements OnAdapterItemClickListener {
+public class NeighbourFragment extends Fragment implements OnNeighbourClickListener {
 
     private NeighbourApiService mApiService;
     private RecyclerView mRecyclerView;
+
+    private static final String MODE_FAVORITE = "MODE_FAVORITE";
+    private OnNeighbourClickListener listener;
 
     /**
      * Create and return a new instance
      *
      * @return @{@link NeighbourFragment}
      */
-    public static NeighbourFragment newInstance() {
-        return new NeighbourFragment();
+    public static NeighbourFragment newInstance(boolean isFavoriteMode) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MODE_FAVORITE, isFavoriteMode);
+        NeighbourFragment fragment = new NeighbourFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener = (OnNeighbourClickListener) context;
     }
 
     @Override
@@ -57,6 +70,7 @@ public class NeighbourFragment extends Fragment implements OnAdapterItemClickLis
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+
         return view;
     }
 
@@ -64,7 +78,13 @@ public class NeighbourFragment extends Fragment implements OnAdapterItemClickLis
      * Init the List of neighbours
      */
     private void initList() {
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mApiService.getNeighbours(), getActivity(), this, this));
+        List<Neighbour> neighbours;
+        if (requireArguments().getBoolean(MODE_FAVORITE)) {
+            neighbours = mApiService.getFavoritesNeighbours();
+        } else {
+            neighbours = mApiService.getNeighbours();
+        }
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, this));
     }
 
     @Override
@@ -97,9 +117,7 @@ public class NeighbourFragment extends Fragment implements OnAdapterItemClickLis
     }
 
     @Override
-    public void onAdapterItemClickListener(long id) {
-        Intent intent = new Intent(getActivity(), NeighbourDetailsActivity.class);
-        intent.putExtra("id", id);
-        getActivity().startActivity(intent);
+    public void onNeighbourClick(long id) {
+        listener.onNeighbourClick(id);
     }
 }

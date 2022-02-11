@@ -38,9 +38,9 @@ public class NeighbourServiceTest {
     @Test
     public void getNeighboursFavoriteWithSuccess() {
         Neighbour neighbourToFavorite = service.getNeighbours().get(0);
-        service.neighbourChangeFavorites(neighbourToFavorite);
+        service.neighbourChangeFavorites(neighbourToFavorite.getId());
         List<Neighbour> neighboursFavorites = service.getFavoritesNeighbours();
-        assertTrue(neighboursFavorites.get(0).getIsFavorite());
+        assertTrue(neighboursFavorites.contains(neighbourToFavorite));
     }
 
     @Test
@@ -53,7 +53,16 @@ public class NeighbourServiceTest {
     @Test
     public void changeFavoriteNeighbourWithSuccess() {
         Neighbour neighbourToFavorite = service.getNeighbours().get(0);
-        service.neighbourChangeFavorites(neighbourToFavorite);
-        assertTrue(service.getFavoritesNeighbours().contains(neighbourToFavorite));
+        service.neighbourChangeFavorites(neighbourToFavorite.getId());
+        assertTrue(neighbourToFavorite.getIsFavorite());
+    }
+
+    @Test
+    public void changeFavoriteNeighbourNotModifiedNoneFavoriteNeighbour() {
+        Neighbour neighbourToFavorite = service.getNeighbours().get(0);
+        Neighbour neighbour = service.getNeighbours().get(1);
+        service.neighbourChangeFavorites(neighbourToFavorite.getId());
+        assertTrue(service.getNeighbours().contains(neighbourToFavorite));
+        assertFalse(service.getFavoritesNeighbours().contains(neighbour));
     }
 }
